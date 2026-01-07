@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ADPS-100 Aetheric Power Station - 3D Visualization</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: linear-gradient(
+          135deg,
+          #0a0a1a 0%,
+          #1a1a3a 50%,
+          #0a0a2a 100%
+        );
+        color: #fff;
+        overflow: hidden;
+      }
+
+      #container {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+      }
+
+      #canvas {
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Control Panel */
+      #controls {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        border: 1px solid rgba(100, 200, 255, 0.3);
+        border-radius: 12px;
+        padding: 20px;
+        width: 280px;
+        backdrop-filter: blur(10px);
+      }
+
+      #controls h2 {
+        font-size: 16px;
+        margin-bottom: 15px;
+        color: #4af;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      .control-group {
+        margin-bottom: 15px;
+      }
+
+      .control-group label {
+        display: block;
+        font-size: 12px;
+        color: #888;
+        margin-bottom: 5px;
+      }
+
+      .control-group input[type="range"] {
+        width: 100%;
+        accent-color: #4af;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #4af, #28f);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        transform: scale(1.02);
+        box-shadow: 0 0 20px rgba(68, 170, 255, 0.5);
+      }
+
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: #4af;
+        border: 1px solid #4af;
+      }
+
+      /* Status Display */
+      #status {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        border: 1px solid rgba(100, 200, 255, 0.3);
+        border-radius: 12px;
+        padding: 20px;
+        width: 260px;
+        backdrop-filter: blur(10px);
+      }
+
+      #status h3 {
+        font-size: 14px;
+        color: #4af;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .stat-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 13px;
+      }
+
+      .stat-label {
+        color: #888;
+      }
+
+      .stat-value {
+        color: #4f8;
+        font-weight: bold;
+        font-family: "Courier New", monospace;
+      }
+
+      .stat-value.warning {
+        color: #fa4;
+      }
+
+      .stat-value.danger {
+        color: #f44;
+      }
+
+      /* Power Bar */
+      .power-bar {
+        width: 100%;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        margin-top: 10px;
+      }
+
+      .power-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #4f8, #4af, #84f);
+        border-radius: 10px;
+        transition: width 0.3s ease;
+        box-shadow: 0 0 10px rgba(68, 255, 136, 0.5);
+      }
+
+      /* LED Indicators */
+      .led-row {
+        display: flex;
+        gap: 15px;
+        margin-top: 15px;
+        justify-content: center;
+      }
+
+      .led {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+      }
+
+      .led.green {
+        background: #333;
+      }
+      .led.blue {
+        background: #333;
+      }
+      .led.orange {
+        background: #333;
+      }
+
+      .led.green.on {
+        background: #4f8;
+        box-shadow: 0 0 15px #4f8;
+      }
+      .led.blue.on {
+        background: #48f;
+        box-shadow: 0 0 15px #48f;
+      }
+      .led.orange.on {
+        background: #f84;
+        box-shadow: 0 0 15px #f84;
+      }
+
+      /* Info Panel */
+      #info {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.7);
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-size: 12px;
+        color: #888;
+      }
+
+      /* Theory Panel */
+      #theory {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        border: 1px solid rgba(100, 200, 255, 0.3);
+        border-radius: 12px;
+        padding: 15px;
+        width: 280px;
+        font-size: 11px;
+        color: #aaa;
+        line-height: 1.5;
+      }
+
+      #theory h4 {
+        color: #f84;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <canvas id="canvas"></canvas>
+    </div>
+
+    <!-- Controls -->
+    <div id="controls">
+      <h2>⚡ ADPS-100 Control</h2>
+
+      <div class="control-group">
+        <label>Aetheric Field Intensity</label>
+        <input type="range" id="fieldIntensity" min="0" max="100" value="50" />
+      </div>
+
+      <div class="control-group">
+        <label>Resonance Frequency (MHz)</label>
+        <input
+          type="range"
+          id="resonanceFreq"
+          min="2"
+          max="5"
+          step="0.1"
+          value="3.5"
+        />
+      </div>
+
+      <div class="control-group">
+        <label>Atmospheric Conditions</label>
+        <input type="range" id="atmosphere" min="0" max="100" value="70" />
+      </div>
+
+      <button class="btn btn-primary" onclick="startSimulation()">
+        ▶ Start Aetheric Harvest
+      </button>
+
+      <button class="btn btn-secondary" onclick="toggleCutaway()">
+        👁 Toggle Cutaway View
+      </button>
+
+      <button class="btn btn-secondary" onclick="resetView()">
+        🔄 Reset Camera
+      </button>
+    </div>
+
+    <!-- Status Display -->
+    <div id="status">
+      <h3>📊 Live Harvest Data</h3>
+
+      <div class="stat-row">
+        <span class="stat-label">Power Output:</span>
+        <span class="stat-value" id="powerValue">0.00 W</span>
+      </div>
+
+      <div class="stat-row">
+        <span class="stat-label">Resonance:</span>
+        <span class="stat-value" id="resonanceValue">TUNING...</span>
+      </div>
+
+      <div class="stat-row">
+        <span class="stat-label">Field Coupling:</span>
+        <span class="stat-value" id="couplingValue">0%</span>
+      </div>
+
+      <div class="stat-row">
+        <span class="stat-label">Total Harvested:</span>
+        <span class="stat-value" id="totalValue">0.00 Wh</span>
+      </div>
+
+      <div class="power-bar">
+        <div class="power-fill" id="powerBar" style="width: 0%"></div>
+      </div>
+
+      <div class="led-row">
+        <div class="led green" id="ledGreen" title="Basic (5W+)"></div>
+        <div class="led blue" id="ledBlue" title="Good (15W+)"></div>
+        <div class="led orange" id="ledOrange" title="Excellent (25W+)"></div>
+      </div>
+    </div>
+
+    <!-- Theory Panel -->
+    <div id="theory">
+      <h4>🌀 Tesla's Aetheric Theory</h4>
+      <p>
+        The aether exerts constant downward pressure (1G). This creates charge
+        separation between the top collector (high potential) and bottom ground
+        plane (low potential).
+      </p>
+      <p style="margin-top: 8px">
+        The bifilar coil cancels magnetic fields, creating scalar waves that
+        couple directly to the aetheric medium. At resonance, voltage amplifies
+        dramatically.
+      </p>
+    </div>
+
+    <!-- Info -->
+    <div id="info">
+      Drag to rotate • Scroll to zoom • This is a SIMULATION of theoretical
+      operation
+    </div>
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+      // Scene setup
+      let scene, camera, renderer, controls;
+      let device,
+        particles = [];
+      let cutawayMode = false;
+      let simulationRunning = false;
+      let harvestPower = 0;
+      let totalHarvested = 0;
+      let resonanceLocked = false;
+
+      // Device parts
+      let enclosure, topCap, bottomPlate, collector, groundPlane;
+      let bifilarCoil, secondaryCoil, glowRing;
+      let aetherParticles = [];
+      let energyRings = [];
+
+      init();
+      animate();
+
+      function init() {
+        // Scene
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a0a1a);
+        scene.fog = new THREE.Fog(0x0a0a1a, 10, 50);
+
+        // Camera
+        camera = new THREE.PerspectiveCamera(
+          60,
+          window.innerWidth / window.innerHeight,
+          0.1,
+          1000
+        );
+        camera.position.set(4, 3, 4);
+        camera.lookAt(0, 0, 0);
+
+        // Renderer
+        renderer = new THREE.WebGLRenderer({
+          canvas: document.getElementById("canvas"),
+          antialias: true,
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.shadowMap.enabled = true;
+
+        // Lights
+        const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+        scene.add(ambientLight);
+
+        const mainLight = new THREE.DirectionalLight(0xffffff, 1);
+        mainLight.position.set(5, 10, 5);
+        mainLight.castShadow = true;
+        scene.add(mainLight);
+
+        const blueLight = new THREE.PointLight(0x4488ff, 0.5, 10);
+        blueLight.position.set(-2, 2, 2);
+        scene.add(blueLight);
+
+        const orangeLight = new THREE.PointLight(0xff8844, 0.3, 10);
+        orangeLight.position.set(2, -1, -2);
+        scene.add(orangeLight);
+
+        // Create device
+        createDevice();
+        createAetherParticles();
+        createEnergyRings();
+
+        // Grid helper (subtle)
+        const gridHelper = new THREE.GridHelper(10, 20, 0x222244, 0x111133);
+        gridHelper.position.y = -1.5;
+        scene.add(gridHelper);
+
+        // Mouse controls
+        setupControls();
+
+        // Resize handler
+        window.addEventListener("resize", onWindowResize);
+      }
+
+      function createDevice() {
+        device = new THREE.Group();
+
+        // Materials
+        const aluminumMat = new THREE.MeshStandardMaterial({
+          color: 0x333340,
+          metalness: 0.9,
+          roughness: 0.3,
+        });
+
+        const copperMat = new THREE.MeshStandardMaterial({
+          color: 0xcc7744,
+          metalness: 0.95,
+          roughness: 0.2,
+        });
+
+        const acrylicMat = new THREE.MeshPhysicalMaterial({
+          color: 0x88ccff,
+          metalness: 0,
+          roughness: 0.1,
+          transmission: 0.9,
+          thickness: 0.1,
+        });
+
+        const ferriteMat = new THREE.MeshStandardMaterial({
+          color: 0x222222,
+          metalness: 0.2,
+          roughness: 0.8,
+        });
+
+        const wireMat = new THREE.MeshStandardMaterial({
+          color: 0xcc8833,
+          metalness: 0.8,
+          roughness: 0.3,
+        });
+
+        // Enclosure body (cylinder)
+        const bodyGeom = new THREE.CylinderGeometry(1.27, 1.27, 1.52, 64);
+        enclosure = new THREE.Mesh(bodyGeom, aluminumMat);
+        enclosure.position.y = 0.76;
+        device.add(enclosure);
+
+        // Make it hollow for cutaway
+        const innerGeom = new THREE.CylinderGeometry(1.2, 1.2, 1.5, 64);
+        const innerMat = new THREE.MeshStandardMaterial({
+          color: 0x111115,
+          side: THREE.BackSide,
+        });
+        const inner = new THREE.Mesh(innerGeom, innerMat);
+        inner.position.y = 0.76;
+        device.add(inner);
+
+        // Bottom plate
+        const bottomGeom = new THREE.CylinderGeometry(1.27, 1.27, 0.06, 64);
+        bottomPlate = new THREE.Mesh(bottomGeom, aluminumMat);
+        bottomPlate.position.y = 0.03;
+        device.add(bottomPlate);
+
+        // Rubber feet
+        const footGeom = new THREE.SphereGeometry(
+          0.06,
+          16,
+          8,
+          0,
+          Math.PI * 2,
+          0,
+          Math.PI / 2
+        );
+        const footMat = new THREE.MeshStandardMaterial({
+          color: 0x222222,
+          roughness: 0.9,
+        });
+        for (let i = 0; i < 4; i++) {
+          const foot = new THREE.Mesh(footGeom, footMat);
+          const angle = (i / 4) * Math.PI * 2 + Math.PI / 4;
+          foot.position.set(Math.cos(angle) * 1, -0.03, Math.sin(angle) * 1);
+          foot.rotation.x = Math.PI;
+          device.add(foot);
+        }
+
+        // Top cap
+        const topGeom = new THREE.CylinderGeometry(1.27, 1.27, 0.1, 64);
+        topCap = new THREE.Mesh(topGeom, aluminumMat);
+        topCap.position.y = 1.57;
+        device.add(topCap);
+
+        // Copper collector plate (ring with spokes)
+        const collectorGeom = new THREE.RingGeometry(0.76, 1.25, 64);
+        collector = new THREE.Mesh(collectorGeom, copperMat);
+        collector.rotation.x = -Math.PI / 2;
+        collector.position.y = 1.53;
+        device.add(collector);
+
+        // Spokes
+        for (let i = 0; i < 8; i++) {
+          const spokeGeom = new THREE.BoxGeometry(0.02, 0.005, 0.5);
+          const spoke = new THREE.Mesh(spokeGeom, copperMat);
+          const angle = (i / 8) * Math.PI * 2;
+          spoke.position.set(
+            Math.cos(angle) * 0.4,
+            1.535,
+            Math.sin(angle) * 0.4
+          );
+          spoke.rotation.y = angle;
+          device.add(spoke);
+        }
+
+        // Acrylic window
+        const windowGeom = new THREE.CylinderGeometry(0.75, 0.75, 0.05, 64);
+        const acrylicWindow = new THREE.Mesh(windowGeom, acrylicMat);
+        acrylicWindow.position.y = 1.55;
+        device.add(acrylicWindow);
+
+        // Ground plane (internal)
+        const groundGeom = new THREE.CylinderGeometry(1.15, 1.15, 0.01, 64);
+        groundPlane = new THREE.Mesh(groundGeom, copperMat);
+        groundPlane.position.y = 0.38;
+        device.add(groundPlane);
+
+        // Bifilar toroidal coil
+        const torusGeom = new THREE.TorusGeometry(0.25, 0.12, 16, 48);
+        bifilarCoil = new THREE.Mesh(torusGeom, ferriteMat);
+        bifilarCoil.rotation.x = Math.PI / 2;
+        bifilarCoil.position.y = 1.0;
+        device.add(bifilarCoil);
+
+        // Wire wrapping on bifilar
+        const wireGeom = new THREE.TorusGeometry(0.25, 0.13, 8, 200);
+        const bifilarWire = new THREE.Mesh(wireGeom, wireMat);
+        bifilarWire.rotation.x = Math.PI / 2;
+        bifilarWire.position.y = 1.0;
+        device.add(bifilarWire);
+
+        // Secondary coil (horizontal rod)
+        const rodGeom = new THREE.CylinderGeometry(0.05, 0.05, 0.8, 16);
+        secondaryCoil = new THREE.Mesh(rodGeom, ferriteMat);
+        secondaryCoil.rotation.z = Math.PI / 2;
+        secondaryCoil.position.set(0.5, 1.0, 0);
+        device.add(secondaryCoil);
+
+        // Wire on secondary
+        const secWireGeom = new THREE.CylinderGeometry(0.06, 0.06, 0.7, 32);
+        const secWire = new THREE.Mesh(secWireGeom, wireMat);
+        secWire.rotation.z = Math.PI / 2;
+        secWire.position.set(0.5, 1.0, 0);
+        device.add(secWire);
+
+        // Glow ring for energy effect
+        const glowGeom = new THREE.TorusGeometry(0.3, 0.02, 8, 64);
+        const glowMat = new THREE.MeshBasicMaterial({
+          color: 0x44aaff,
+          transparent: true,
+          opacity: 0,
+        });
+        glowRing = new THREE.Mesh(glowGeom, glowMat);
+        glowRing.rotation.x = Math.PI / 2;
+        glowRing.position.y = 1.0;
+        device.add(glowRing);
+
+        // Front panel elements
+        const panelGeom = new THREE.BoxGeometry(0.4, 0.25, 0.02);
+        const panelMat = new THREE.MeshStandardMaterial({ color: 0x222228 });
+        const frontPanel = new THREE.Mesh(panelGeom, panelMat);
+        frontPanel.position.set(1.26, 0.4, 0);
+        frontPanel.rotation.y = Math.PI / 2;
+        device.add(frontPanel);
+
+        // OLED screen
+        const screenGeom = new THREE.BoxGeometry(0.15, 0.06, 0.005);
+        const screenMat = new THREE.MeshBasicMaterial({ color: 0x001122 });
+        const screen = new THREE.Mesh(screenGeom, screenMat);
+        screen.position.set(1.28, 0.42, -0.08);
+        screen.rotation.y = Math.PI / 2;
+        device.add(screen);
+
+        // LED indicators
+        const ledColors = [0x44ff88, 0x4488ff, 0xff8844];
+        const ledPositions = [0.06, 0, -0.06];
+        for (let i = 0; i < 3; i++) {
+          const ledGeom = new THREE.SphereGeometry(0.02, 16, 16);
+          const ledMat = new THREE.MeshBasicMaterial({
+            color: 0x333333,
+            transparent: true,
+          });
+          const led = new THREE.Mesh(ledGeom, ledMat);
+          led.position.set(1.28, 0.48, ledPositions[i]);
+          led.userData.baseColor = ledColors[i];
+          led.userData.index = i;
+          device.add(led);
+        }
+
+        scene.add(device);
+      }
+
+      function createAetherParticles() {
+        const particleGeom = new THREE.SphereGeometry(0.02, 8, 8);
+        const particleMat = new THREE.MeshBasicMaterial({
+          color: 0x88ccff,
+          transparent: true,
+          opacity: 0.6,
+        });
+
+        for (let i = 0; i < 200; i++) {
+          const particle = new THREE.Mesh(particleGeom, particleMat.clone());
+          const radius = 0.5 + Math.random() * 3;
+          const angle = Math.random() * Math.PI * 2;
+          particle.position.set(
+            Math.cos(angle) * radius,
+            3 + Math.random() * 5,
+            Math.sin(angle) * radius
+          );
+          particle.userData = {
+            angle: angle,
+            radius: radius,
+            speed: 0.5 + Math.random() * 1.5,
+            spiralSpeed: 0.02 + Math.random() * 0.03,
+          };
+          aetherParticles.push(particle);
+          scene.add(particle);
+        }
+      }
+
+      function createEnergyRings() {
+        for (let i = 0; i < 5; i++) {
+          const ringGeom = new THREE.TorusGeometry(0.3 + i * 0.1, 0.01, 8, 64);
+          const ringMat = new THREE.MeshBasicMaterial({
+            color: 0x44ff88,
+            transparent: true,
+            opacity: 0,
+          });
+          const ring = new THREE.Mesh(ringGeom, ringMat);
+          ring.rotation.x = Math.PI / 2;
+          ring.position.y = 1.0;
+          ring.userData.delay = i * 0.2;
+          ring.userData.baseScale = 1 + i * 0.3;
+          energyRings.push(ring);
+          device.add(ring);
+        }
+      }
+
+      function setupControls() {
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+        let targetRotation = { x: 0, y: 0 };
+        let currentRotation = { x: 0, y: 0 };
+
+        document.addEventListener("mousedown", (e) => {
+          isDragging = true;
+        });
+
+        document.addEventListener("mousemove", (e) => {
+          if (isDragging) {
+            const deltaX = e.clientX - previousMousePosition.x;
+            const deltaY = e.clientY - previousMousePosition.y;
+
+            targetRotation.y += deltaX * 0.005;
+            targetRotation.x += deltaY * 0.005;
+            targetRotation.x = Math.max(
+              -Math.PI / 3,
+              Math.min(Math.PI / 3, targetRotation.x)
+            );
+          }
+          previousMousePosition = { x: e.clientX, y: e.clientY };
+        });
+
+        document.addEventListener("mouseup", () => {
+          isDragging = false;
+        });
+
+        document.addEventListener("wheel", (e) => {
+          camera.position.multiplyScalar(1 + e.deltaY * 0.001);
+          camera.position.clampLength(3, 15);
+        });
+
+        // Smooth camera rotation
+        setInterval(() => {
+          currentRotation.x += (targetRotation.x - currentRotation.x) * 0.1;
+          currentRotation.y += (targetRotation.y - currentRotation.y) * 0.1;
+
+          const distance = camera.position.length();
+          camera.position.x =
+            Math.sin(currentRotation.y) *
+            Math.cos(currentRotation.x) *
+            distance;
+          camera.position.y = Math.sin(currentRotation.x) * distance + 1;
+          camera.position.z =
+            Math.cos(currentRotation.y) *
+            Math.cos(currentRotation.x) *
+            distance;
+          camera.lookAt(0, 0.7, 0);
+        }, 16);
+      }
+
+      function startSimulation() {
+        simulationRunning = !simulationRunning;
+        const btn = document.querySelector(".btn-primary");
+        btn.textContent = simulationRunning
+          ? "⏸ Pause Simulation"
+          : "▶ Start Aetheric Harvest";
+
+        if (simulationRunning) {
+          // Start tuning sequence
+          setTimeout(() => {
+            resonanceLocked = true;
+            document.getElementById("resonanceValue").textContent = "LOCKED";
+          }, 2000);
+        }
+      }
+
+      function toggleCutaway() {
+        cutawayMode = !cutawayMode;
+
+        // Animate enclosure transparency
+        enclosure.material.transparent = true;
+        enclosure.material.opacity = cutawayMode ? 0.2 : 1;
+        enclosure.material.side = cutawayMode
+          ? THREE.DoubleSide
+          : THREE.FrontSide;
+      }
+
+      function resetView() {
+        camera.position.set(4, 3, 4);
+        camera.lookAt(0, 0, 0);
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+
+        const time = Date.now() * 0.001;
+        const fieldIntensity =
+          document.getElementById("fieldIntensity").value / 100;
+        const resonanceFreq = parseFloat(
+          document.getElementById("resonanceFreq").value
+        );
+        const atmosphere = document.getElementById("atmosphere").value / 100;
+
+        // Animate aether particles (downward spiral)
+        if (simulationRunning) {
+          aetherParticles.forEach((particle, i) => {
+            const data = particle.userData;
+
+            // Spiral down toward collector
+            particle.position.y -= data.speed * 0.02 * fieldIntensity;
+            data.angle += data.spiralSpeed;
+
+            // Spiral inward
+            if (particle.position.y < 2.5) {
+              data.radius *= 0.995;
+            }
+
+            particle.position.x = Math.cos(data.angle) * data.radius;
+            particle.position.z = Math.sin(data.angle) * data.radius;
+
+            // Brighten near collector
+            const distToCollector = particle.position.distanceTo(
+              new THREE.Vector3(0, 1.5, 0)
+            );
+            particle.material.opacity = Math.max(0.2, 1 - distToCollector / 3);
+
+            // Reset when absorbed
+            if (particle.position.y < 1.5 && data.radius < 0.5) {
+              particle.position.y = 5 + Math.random() * 3;
+              data.radius = 1 + Math.random() * 2;
+              data.angle = Math.random() * Math.PI * 2;
+            }
+          });
+
+          // Calculate simulated power based on settings
+          const coupling =
+            fieldIntensity * atmosphere * (resonanceLocked ? 1 : 0.1);
+          const resonanceBoost = 1 + Math.sin((resonanceFreq - 3.5) * 2) * 0.3;
+          const targetPower =
+            coupling * resonanceBoost * 50 * (0.8 + Math.random() * 0.4);
+
+          harvestPower += (targetPower - harvestPower) * 0.05;
+          if (harvestPower > 0.1) {
+            totalHarvested += harvestPower * 0.0001;
+          }
+
+          // Update glow ring
+          glowRing.material.opacity = Math.min(1, harvestPower / 30) * 0.5;
+          glowRing.scale.setScalar(
+            1 + Math.sin(time * 5) * 0.1 * (harvestPower / 50)
+          );
+          glowRing.material.color.setHSL(0.55 + harvestPower / 200, 1, 0.5);
+
+          // Animate energy rings
+          if (harvestPower > 5) {
+            energyRings.forEach((ring, i) => {
+              const phase = (time * 2 + ring.userData.delay) % 1;
+              ring.material.opacity = (1 - phase) * 0.5 * (harvestPower / 50);
+              ring.scale.setScalar(ring.userData.baseScale + phase * 0.5);
+            });
+          }
+
+          // Animate coils
+          bifilarCoil.rotation.z = Math.sin(time * resonanceFreq) * 0.02;
+
+          // Update LEDs in 3D
+          device.children.forEach((child) => {
+            if (child.userData.index !== undefined) {
+              const i = child.userData.index;
+              const thresholds = [5, 15, 25];
+              if (harvestPower >= thresholds[i]) {
+                child.material.color.setHex(child.userData.baseColor);
+                child.material.opacity = 0.8 + Math.sin(time * 10) * 0.2;
+              } else {
+                child.material.color.setHex(0x333333);
+              }
+            }
+          });
+        }
+
+        // Slow rotation when not dragging
+        if (!simulationRunning) {
+          device.rotation.y += 0.002;
+        }
+
+        // Update UI
+        updateUI(
+          harvestPower,
+          totalHarvested,
+          resonanceFreq,
+          fieldIntensity * atmosphere
+        );
+
+        renderer.render(scene, camera);
+      }
+
+      function updateUI(power, total, freq, coupling) {
+        // Power value
+        const powerEl = document.getElementById("powerValue");
+        if (power < 1) {
+          powerEl.textContent = (power * 1000).toFixed(1) + " mW";
+          powerEl.className = "stat-value danger";
+        } else {
+          powerEl.textContent = power.toFixed(2) + " W";
+          powerEl.className = power > 5 ? "stat-value" : "stat-value warning";
+        }
+
+        // Coupling
+        document.getElementById("couplingValue").textContent =
+          (coupling * 100).toFixed(0) + "%";
+
+        // Total
+        document.getElementById("totalValue").textContent =
+          total.toFixed(3) + " Wh";
+
+        // Power bar
+        document.getElementById("powerBar").style.width =
+          Math.min(100, power * 2) + "%";
+
+        // LEDs
+        document.getElementById("ledGreen").className =
+          "led green" + (power >= 5 ? " on" : "");
+        document.getElementById("ledBlue").className =
+          "led blue" + (power >= 15 ? " on" : "");
+        document.getElementById("ledOrange").className =
+          "led orange" + (power >= 25 ? " on" : "");
+      }
+
+      function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,175 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title "ADPS-100 Power Conditioning Board"
+Date "2026-01-07"
+Rev "1.0"
+Comp "Aetheric Energy Systems"
+Comment1 "Rectifier + Multiplier + Regulation"
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+
+$Comp
+L Device:D D1
+U 1 1 XXXXXXXX
+P 2000 1500
+F 0 "D1" H 2000 1600 50 0000 C CNN
+F 1 "1N4007" H 2000 1400 50 0000 C CNN
+F 2 "Diode_THT:D_DO-41_SOD81_P10.16mm_Horizontal" H 2000 1500 50 0001 C CNN
+F 3 "" H 2000 1500 50 0001 C CNN
+	1    2000 1500
+	1    0    0    -1  
+$EndComp
+
+$Comp
+L Device:D D2
+U 1 1 XXXXXXXX
+P 2000 2000
+F 0 "D2" H 2000 2100 50 0000 C CNN
+F 1 "1N4007" H 2000 1900 50 0000 C CNN
+F 2 "Diode_THT:D_DO-41_SOD81_P10.16mm_Horizontal" H 2000 2000 50 0001 C CNN
+F 3 "" H 2000 2000 50 0001 C CNN
+	1    2000 2000
+	1    0    0    -1  
+$EndComp
+
+$Comp
+L Device:C C1
+U 1 1 XXXXXXXX
+P 2500 1750
+F 0 "C1" H 2600 1750 50 0000 L CNN
+F 1 "100nF 2kV" H 2600 1650 50 0000 L CNN
+F 2 "Capacitor_THT:C_Disc_D12.0mm_W5.0mm_P7.50mm" H 2500 1750 50 0001 C CNN
+F 3 "" H 2500 1750 50 0001 C CNN
+	1    2500 1750
+	1    0    0    -1  
+$EndComp
+
+$Comp
+L Device:C C2
+U 1 1 XXXXXXXX
+P 3000 1750
+F 0 "C2" H 3100 1750 50 0000 L CNN
+F 1 "100nF 2kV" H 3100 1650 50 0000 L CNN
+F 2 "Capacitor_THT:C_Disc_D12.0mm_W5.0mm_P7.50mm" H 3000 1750 50 0001 C CNN
+F 3 "" H 3000 1750 50 0001 C CNN
+	1    3000 1750
+	1    0    0    -1  
+$EndComp
+
+$Comp
+L Device:CP C_STORE1
+U 1 1 XXXXXXXX
+P 6000 2500
+F 0 "C_STORE1" H 6100 2500 50 0000 L CNN
+F 1 "470uF 450V" H 6100 2400 50 0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_D18.0mm_P7.50mm" H 6000 2500 50 0001 C CNN
+F 3 "" H 6000 2500 50 0001 C CNN
+	1    6000 2500
+	1    0    0    -1  
+$EndComp
+
+$Comp
+L Device:CP C_STORE2
+U 1 1 XXXXXXXX
+P 6500 2500
+F 0 "C_STORE2" H 6600 2500 50 0000 L CNN
+F 1 "470uF 450V" H 6600 2400 50 0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_D18.0mm_P7.50mm" H 6500 2500 50 0001 C CNN
+F 3 "" H 6500 2500 50 0001 C CNN
+	1    6500 2500
+	1    0    0    -1  
+$EndComp
+
+$Comp
+L Device:CP C_STORE3
+U 1 1 XXXXXXXX
+P 7000 2500
+F 0 "C_STORE3" H 7100 2500 50 0000 L CNN
+F 1 "470uF 450V" H 7100 2400 50 0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_D18.0mm_P7.50mm" H 7000 2500 50 0001 C CNN
+F 3 "" H 7000 2500 50 0001 C CNN
+	1    7000 2500
+	1    0    0    -1  
+$EndComp
+
+$Comp
+L Device:CP C_STORE4
+U 1 1 XXXXXXXX
+P 7500 2500
+F 0 "C_STORE4" H 7600 2500 50 0000 L CNN
+F 1 "470uF 450V" H 7600 2400 50 0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_D18.0mm_P7.50mm" H 7500 2500 50 0001 C CNN
+F 3 "" H 7500 2500 50 0001 C CNN
+	1    7500 2500
+	1    0    0    -1  
+$EndComp
+
+$Comp
+L Connector:Screw_Terminal_01x02 J_HV_IN
+U 1 1 XXXXXXXX
+P 1200 1750
+F 0 "J_HV_IN" H 1200 1900 50 0000 C CNN
+F 1 "HV_INPUT" H 1200 1500 50 0000 C CNN
+F 2 "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" H 1200 1750 50 0001 C CNN
+F 3 "" H 1200 1750 50 0001 C CNN
+	1    1200 1750
+	-1   0    0    -1  
+$EndComp
+
+$Comp
+L Connector:Screw_Terminal_01x02 J_20V_OUT
+U 1 1 XXXXXXXX
+P 9500 2000
+F 0 "J_20V_OUT" H 9500 2150 50 0000 C CNN
+F 1 "20V_OUTPUT" H 9500 1750 50 0000 C CNN
+F 2 "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" H 9500 2000 50 0001 C CNN
+F 3 "" H 9500 2000 50 0001 C CNN
+	1    9500 2000
+	1    0    0    -1  
+$EndComp
+
+Text Notes 1500 1000 0 100
+COCKCROFT-WALTON 6-STAGE VOLTAGE MULTIPLIER
+Text Notes 5500 2000 0 100
+STORAGE CAPACITOR BANK (4x SERIES = 1800V)
+Text Notes 8000 1500 0 100
+XL6009 BUCK-BOOST MODULE
+
+Wire Notes Line
+	1000 800 5000 800
+Wire Notes Line
+	5000 800 5000 3200
+Wire Notes Line
+	5000 3200 1000 3200
+Wire Notes Line
+	1000 3200 1000 800
+
+Wire Notes Line
+	5200 1800 8200 1800
+Wire Notes Line
+	8200 1800 8200 3200
+Wire Notes Line
+	8200 3200 5200 3200
+Wire Notes Line
+	5200 3200 5200 1800
+
+Text Notes 1500 4500 0 100
+CIRCUIT NOTES:
+Text Notes 1500 4800 0 50
+1. HV_INPUT receives AC from secondary coil (200-500V AC)
+Text Notes 1500 5000 0 50
+2. Cockcroft-Walton multiplier converts to ~1200V DC
+Text Notes 1500 5200 0 50
+3. Storage caps in series handle high voltage
+Text Notes 1500 5400 0 50
+4. XL6009 module bucks down to 20V DC regulated
+Text Notes 1500 5600 0 50
+5. 20V output feeds USB-C PD, USB-A, and Qi modules
+
+$EndSCHEMATC

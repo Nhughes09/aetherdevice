@@ -1,0 +1,185 @@
+══════════════════════════════════════════════════════════════════════════════
+     TURNKEY PROTOTYPE - SINGLE MANUFACTURER - FULLY ASSEMBLED DELIVERY
+              完全交钥匙原型 - 单一制造商 - 完全组装交付
+══════════════════════════════════════════════════════════════════════════════
+
+TO: [Find on Alibaba - search "turnkey electronics assembly" or "OEM prototype service"]
+FROM: nlhughes08@gmail.com
+SUBJECT: FULL TURNKEY Prototype - Need Finished Device Delivered (1 Unit)
+主题：完全交钥匙原型 - 需要成品设备交付（1台）
+
+══════════════════════════════════════════════════════════════════════════════
+COPY THIS ENTIRE MESSAGE - PASTE INTO ALIBABA CHAT OR EMAIL
+复制整条信息 - 粘贴到阿里巴巴聊天或邮件
+══════════════════════════════════════════════════════════════════════════════
+
+Hello,
+您好，
+
+I need ONE manufacturer to handle EVERYTHING and deliver a FINISHED, WORKING device.
+我需要一家制造商处理所有事情，并交付一个完成的、可工作的设备。
+
+**I am NOT interested in:**
+**我不感兴趣的：**
+❌ Separate suppliers for different parts / 不同部件的不同供应商
+❌ Assembling myself / 我自己组装
+❌ Coordinating between multiple factories / 协调多家工厂
+
+**I NEED:**
+**我需要：**
+✅ ONE company does EVERYTHING / 一家公司做所有事情
+✅ Deliver COMPLETE, ASSEMBLED, TESTED device / 交付完整、组装好的、测试过的设备
+✅ Ready to use when I receive it / 收到时即可使用
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROJECT DETAILS / 项目详情:
+
+Device: Desktop electronic power station / 桌面电子电源站
+Size: 254mm diameter × 152mm height (cylinder shape)
+尺寸：直径254mm × 高度152mm（圆柱形）
+
+WHAT THE FINISHED DEVICE INCLUDES:
+成品设备包括：
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                             │
+│  1. ALUMINUM ENCLOSURE (CNC machined, black anodized)                      │
+│     铝制外壳（CNC加工，黑色阳极氧化）                                         │
+│     - Cylindrical body, top cap, bottom plate                              │
+│     - Front panel with display window and USB ports                        │
+│                                                                             │
+│  2. COPPER PLATES (2 pieces)                                               │
+│     铜板（2片）                                                              │
+│     - Top collector plate (mirror polished)                                │
+│     - Internal ground plane                                                │
+│                                                                             │
+│  3. PCB ASSEMBLIES (2 boards, fully populated with components)             │
+│     PCB组件（2块板，完全装配元件）                                            │
+│     - Power conditioning board                                             │
+│     - Control board with STM32 microcontroller (programmed)                │
+│                                                                             │
+│  4. CUSTOM WOUND COILS (2 coils)                                           │
+│     定制绕制线圈（2个线圈）                                                   │
+│     - Bifilar toroidal coil (369 turns on ferrite cores)                  │
+│     - Secondary rod coil (500 turns on ferrite rod)                       │
+│                                                                             │
+│  5. OUTPUT MODULES                                                         │
+│     输出模块                                                                 │
+│     - USB-C PD port                                                        │
+│     - 2× USB-A ports                                                       │
+│     - Qi wireless charging (15W)                                           │
+│                                                                             │
+│  6. DISPLAY & CONTROLS                                                     │
+│     显示和控制                                                               │
+│     - OLED display (0.91 inch)                                             │
+│     - 3× LED status indicators                                             │
+│                                                                             │
+│  7. FULL ASSEMBLY + WIRING + TESTING                                       │
+│     完全组装 + 布线 + 测试                                                   │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+QUANTITY & BUDGET / 数量和预算:
+
+• Quantity: 1 prototype (maybe 2 if price is good)
+  数量：1台原型（如果价格好可能2台）
+
+• Budget: $400-600 USD per unit FULLY ASSEMBLED
+  预算：每台完全组装 400-600 美元
+
+• Timeline: 4-6 weeks acceptable
+  时间：4-6周可接受
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+I HAVE COMPLETE MANUFACTURING FILES READY:
+我有完整的制造文件准备好了：
+
+✓ PCB Gerber files + BOM with LCSC part numbers
+  PCB Gerber文件 + 带LCSC零件号的BOM
+  
+✓ Enclosure CAD files (STEP + DXF + drawings)
+  外壳CAD文件（STEP + DXF + 图纸）
+  
+✓ Coil winding specifications (detailed instructions)
+  线圈绑扎规格（详细说明）
+  
+✓ STM32 firmware HEX file (ready to flash)
+  STM32固件HEX文件（可直接烧录）
+  
+✓ Complete assembly manual with wiring diagrams
+  完整的组装手册和布线图
+
+FILES ARE ~100MB - Will send via WeTransfer link or email
+文件约100MB - 将通过WeTransfer链接或邮件发送
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+BEFORE I SEND FILES, PLEASE CONFIRM:
+在我发送文件之前，请确认：
+
+1. CAN YOU DO FULL TURNKEY? (All manufacturing + assembly under one roof)
+   您能做完全交钥匙吗？（所有制造+组装在一个地方完成）
+
+2. Can you handle custom coil winding? (or subcontract to partner you manage)
+   您能处理定制线圈绑扎吗？（或外包给您管理的合作伙伴）
+
+3. Will you deliver ONE finished, tested device ready to use?
+   您会交付一台完成的、测试过的、可使用的设备吗？
+
+4. What email or method should I use to send 100MB file package?
+   我应该用什么邮件或方法发送100MB文件包？
+
+If YES to all above → Please provide email or preferred file transfer method
+如果以上都是"是" → 请提供邮件或首选文件传输方式
+
+If you can only do PARTIAL (like only PCB, not enclosure) → Please say so now
+如果您只能做部分（如只做PCB，不做外壳）→ 请现在说明
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CONTACT:
+联系方式：
+
+Email: nlhughes08@gmail.com
+Location: United States / 美国
+Payment: PayPal or Trade Assurance / PayPal或信用保证
+
+Thank you! Ready to send complete file package immediately after you confirm.
+谢谢！确认后立即准备发送完整的文件包。
+
+Best regards,
+此致敬礼
+
+══════════════════════════════════════════════════════════════════════════════
+                         END OF MESSAGE
+══════════════════════════════════════════════════════════════════════════════
+
+
+══════════════════════════════════════════════════════════════════════════════
+                    WHAT TO SEARCH ON ALIBABA:
+══════════════════════════════════════════════════════════════════════════════
+
+Search these terms:
+• "Turnkey electronics assembly prototype"
+• "OEM electronic device manufacturing"  
+• "Complete product assembly service Shenzhen"
+• "Electronic prototype manufacturing one stop"
+• "交钥匙电子组装"
+
+Filter by:
+✓ Trade Assurance
+✓ Verified Supplier  
+✓ Response rate >90%
+
+Look for suppliers that show:
+• "One-stop service"
+• "Turnkey assembly"
+• "Full OEM/ODM"
+• "Prototype to production"
+• Photos of assembled electronic products
+
+══════════════════════════════════════════════════════════════════════════════
