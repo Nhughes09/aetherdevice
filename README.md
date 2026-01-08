@@ -1,168 +1,183 @@
 # 🔋 ADPS-100 Aetheric Desktop Power Station
 
-![Device Preview](SEND_TO_MANUFACTURER/9_DEVICE_PREVIEW.png)
-
-## 🚀 QUICK START: Get This Device Manufactured
-
-**This repository contains EVERYTHING you need to have ONE manufacturer build you a complete, assembled, working device.**
+## Complete Manufacturing & Technical Documentation
 
 ---
 
-## 📧 STEP 1: Copy The Email
+## 📸 Device Images (Accurate 3D Models)
 
-Open this file and copy the ENTIRE contents:
-**[📄 1_EMAIL_TEXT_COPY_THIS.txt](SEND_TO_MANUFACTURER/1_EMAIL_TEXT_COPY_THIS.txt)**
+### Exterior View
 
-This email is in **English + Chinese (中文)** and clearly states:
+![Exterior View](Images/01_exterior_view.png)
 
-- ✅ You want ONE manufacturer to do EVERYTHING
-- ✅ You want a FINISHED, ASSEMBLED device delivered
-- ✅ You are NOT assembling yourself
-- ✅ You are NOT coordinating multiple suppliers
+### Cutaway Section
 
----
+![Cutaway View](Images/02_cutaway_view.png)
 
-## 📎 STEP 2: Attach Manufacturing Files
+### Exploded Assembly View
 
-Download and attach these 8 files to your email:
+![Exploded View](Images/03_exploded_view.png)
 
-| File                                                                      | Description                  |
-| ------------------------------------------------------------------------- | ---------------------------- |
-| [2_PCB_GERBERS.zip](SEND_TO_MANUFACTURER/2_PCB_GERBERS.zip)               | PCB fabrication files        |
-| [3_PCB_BOM.csv](SEND_TO_MANUFACTURER/3_PCB_BOM.csv)                       | Parts list with LCSC numbers |
-| [4_ENCLOSURE_CAD.zip](SEND_TO_MANUFACTURER/4_ENCLOSURE_CAD.zip)           | 3D CAD files (STEP + DXF)    |
-| [5_TECHNICAL_DRAWINGS.md](SEND_TO_MANUFACTURER/5_TECHNICAL_DRAWINGS.md)   | Dimensions & specifications  |
-| [6_COIL_SPECIFICATIONS.md](SEND_TO_MANUFACTURER/6_COIL_SPECIFICATIONS.md) | Coil winding instructions    |
-| [7_ASSEMBLY_MANUAL.md](SEND_TO_MANUFACTURER/7_ASSEMBLY_MANUAL.md)         | Assembly instructions        |
-| [8_FIRMWARE.hex](SEND_TO_MANUFACTURER/8_FIRMWARE.hex)                     | STM32 program file           |
-| [9_DEVICE_PREVIEW.png](SEND_TO_MANUFACTURER/9_DEVICE_PREVIEW.png)         | Product render               |
+### Top View
+
+![Top View](Images/04_top_view.png)
+
+### Internal Components Only
+
+![Internal View](Images/05_internal_view.png)
+
+### Perspective View
+
+![Perspective View](Images/06_perspective_view.png)
 
 ---
 
-## 🏭 STEP 3: Find a Manufacturer on Alibaba
+## 🚀 HOW TO GET THIS DEVICE MANUFACTURED
 
-**Search on [Alibaba.com](https://www.alibaba.com) for:**
+### Step 1: Copy the Email
+
+Open **[SEND_TO_MANUFACTURER/1_EMAIL_TEXT_COPY_THIS.txt](SEND_TO_MANUFACTURER/1_EMAIL_TEXT_COPY_THIS.txt)** and copy the entire contents.
+
+### Step 2: Find a Manufacturer
+
+Search on [Alibaba.com](https://www.alibaba.com) for:
 
 - "Turnkey electronics assembly prototype"
-- "OEM electronic device manufacturing"
-- "Electronic prototype one-stop service Shenzhen"
+- "OEM electronic device manufacturing Shenzhen"
 
-**Filter by:**
+Filter by: ✅ Trade Assurance ✅ Verified Supplier
 
-- ✅ Trade Assurance
-- ✅ Verified Supplier
-- ✅ Response rate >90%
+### Step 3: Send the Message
 
-**IMPORTANT: Make sure they can do:**
+Paste the email into Alibaba chat, then attach the 8 files from `SEND_TO_MANUFACTURER/` folder.
 
-- PCB fabrication + component assembly
-- CNC aluminum machining
-- Custom coil winding
-- Final device assembly + testing
+### Step 4: Wait for Quote
+
+Expect response in 1-3 days with quote of $400-600 per unit.
 
 ---
 
-## 💰 Expected Costs
-
-| Service            | Estimated Cost        |
-| ------------------ | --------------------- |
-| PCB + Assembly     | $50-100               |
-| CNC Enclosure      | $150-250              |
-| Copper Parts       | $30-50                |
-| Custom Coils       | $40-80                |
-| Assembly + Testing | $50-100               |
-| Shipping (DHL)     | $50-80                |
-| **TOTAL**          | **$400-650 per unit** |
-
----
-
-## 📁 Complete File Structure
-
-```
-aetherdevice/
-├── SEND_TO_MANUFACTURER/          ← EVERYTHING YOU NEED TO SEND
-│   ├── 0_READ_ME_FIRST.txt
-│   ├── 1_EMAIL_TEXT_COPY_THIS.txt  ← Copy this email
-│   ├── 2_PCB_GERBERS.zip           ← Attach
-│   ├── 3_PCB_BOM.csv               ← Attach
-│   ├── 4_ENCLOSURE_CAD.zip         ← Attach
-│   ├── 5_TECHNICAL_DRAWINGS.md     ← Attach
-│   ├── 6_COIL_SPECIFICATIONS.md    ← Attach
-│   ├── 7_ASSEMBLY_MANUAL.md        ← Attach
-│   ├── 8_FIRMWARE.hex              ← Attach
-│   └── 9_DEVICE_PREVIEW.png        ← Attach
-│
-├── CAD/                            ← OpenSCAD source files
-│   ├── enclosure/
-│   ├── collector/
-│   ├── internal/
-│   └── assembly/
-│
-├── Electronics/                    ← Schematics + Firmware source
-│   ├── schematics/
-│   └── firmware/
-│
-├── Coils/                          ← Detailed winding specs
-├── Documentation/                  ← Guides and diagrams
-├── BOM/                           ← Complete bill of materials
-└── Visualization/                 ← Interactive 3D viewer
-```
-
----
-
-## 📋 COPY-PASTE EMAIL (Quick Version)
+## 📧 QUICK EMAIL (Copy This)
 
 ```
 Subject: FULL TURNKEY Prototype - Need Finished Device Delivered (1 Unit)
-主题：完全交钥匙原型 - 需要成品设备交付（1台）
 
 Hello,
 
 I need ONE manufacturer to handle EVERYTHING and deliver a FINISHED, WORKING device.
+我需要一家制造商处理所有事情，并交付一个完成的、可工作的设备。
 
 PROJECT:
-• Desktop power station (254mm diameter × 152mm height)
-• Aluminum CNC enclosure (black anodized)
+• Desktop power station 254mm diameter × 152mm height
+• CNC aluminum enclosure (black anodized)
 • 2 PCBs with SMD components
 • 2 custom wound coils
-• USB-C + USB-A + Qi wireless charging outputs
-• OLED display + LED indicators
+• USB-C + USB-A + Qi wireless charging
 
 QUANTITY: 1 prototype
 BUDGET: $400-600 USD fully assembled
 TIMELINE: 4-6 weeks acceptable
 
-I have COMPLETE manufacturing files ready (Gerbers, CAD, BOM, assembly manual).
-
-Files are ~100MB total. Please provide email address to send complete package.
+Complete manufacturing files ready (~100MB).
+Please provide email address to send complete package.
 
 Can you do FULL TURNKEY? (manufacture + assemble + test + ship finished device)
 
-If yes, please confirm and I'll send files immediately.
-
-Thank you!
-谢谢！
-
 Contact: nlhughes08@gmail.com
+谢谢！
 ```
 
 ---
 
-## ⚡ What Is This Device?
+## 📁 Manufacturing Files
 
-The ADPS-100 is an experimental device based on Nikola Tesla's aetheric energy theories. It uses:
+| File                                                                 | Description           |
+| -------------------------------------------------------------------- | --------------------- |
+| [PCB Gerbers](SEND_TO_MANUFACTURER/2_PCB_GERBERS.zip)                | PCB fabrication files |
+| [BOM with LCSC](SEND_TO_MANUFACTURER/3_PCB_BOM.csv)                  | Complete parts list   |
+| [CAD Files](SEND_TO_MANUFACTURER/4_ENCLOSURE_CAD.zip)                | STEP + DXF for CNC    |
+| [Technical Drawings](SEND_TO_MANUFACTURER/5_TECHNICAL_DRAWINGS.md)   | Dimensions            |
+| [Coil Specifications](SEND_TO_MANUFACTURER/6_COIL_SPECIFICATIONS.md) | Winding instructions  |
+| [Assembly Manual](SEND_TO_MANUFACTURER/7_ASSEMBLY_MANUAL.md)         | Build guide           |
+| [Firmware](SEND_TO_MANUFACTURER/8_FIRMWARE.hex)                      | STM32 program         |
 
-- **Copper collector plate** - Accumulates atmospheric charge
-- **Bifilar toroidal coil** - Creates scalar wave resonance
-- **Varactor tuning array** - Auto-tunes to optimal frequency
-- **Cockcroft-Walton multiplier** - Steps up collected voltage
-- **STM32 microcontroller** - Monitors and displays power output
+---
 
-The device is designed as a **self-falsifying experiment**:
+## 📐 Specifications
 
-- If the aether exists as Tesla proposed → LEDs light up, power is harvested
-- If no such effect exists → LEDs stay dark
+| Parameter          | Value                                    |
+| ------------------ | ---------------------------------------- |
+| **Dimensions**     | 254mm (10") diameter × 152mm (6") height |
+| **Weight**         | ~5.4 kg (12 lbs)                         |
+| **Enclosure**      | 6061 Aluminum, black anodized            |
+| **Collector**      | 99.9% pure copper, mirror polished       |
+| **Primary Coil**   | Bifilar, 369 turns on 4× FT-240-43       |
+| **Secondary Coil** | 500 turns on ferrite rod                 |
+| **Controller**     | STM32F103C8T6                            |
+| **Outputs**        | USB-C PD, 2× USB-A, Qi wireless          |
+| **Display**        | 0.91" OLED + 3 status LEDs               |
+
+---
+
+## ⚡ How It Works
+
+The ADPS-100 is based on Nikola Tesla's aetheric energy theory:
+
+1. **Collection** - Copper plate collects atmospheric charge from aetheric field
+2. **Resonance** - Bifilar coil creates scalar wave resonance at tuned frequency
+3. **Amplification** - Voltage multiplied through Cockcroft-Walton circuit
+4. **Output** - Regulated 5V/12V/20V for charging devices
+
+### Self-Falsifying Experiment
+
+- **If it works**: Display shows power in watts, LEDs light up
+- **If it doesn't**: Display shows 0, LEDs stay dark
 - **No battery** = No way to fake results
+
+---
+
+## 💰 Estimated Costs
+
+| Component       | Cost         |
+| --------------- | ------------ |
+| PCB + Assembly  | $50-100      |
+| CNC Enclosure   | $150-250     |
+| Copper Parts    | $30-50       |
+| Custom Coils    | $40-80       |
+| Assembly + Test | $50-100      |
+| Shipping (DHL)  | $50-80       |
+| **TOTAL**       | **$400-650** |
+
+---
+
+## 📂 Repository Structure
+
+```
+aetherdevice/
+├── SEND_TO_MANUFACTURER/    ← Files to send to factory
+├── Images/                  ← 3D model renders
+├── CAD/                     ← OpenSCAD source files
+├── Electronics/             ← Schematics + firmware
+├── Coils/                   ← Winding specifications
+├── Documentation/           ← Assembly guides
+├── BOM/                     ← Bill of materials
+└── Visualization/           ← Interactive 3D viewer
+```
+
+---
+
+## 🔗 Interactive 3D Viewer
+
+Open in browser: [Visualization/accurate_3d_model.html](Visualization/accurate_3d_model.html)
+
+Features:
+
+- Exterior view
+- Cutaway section
+- Exploded assembly
+- Top view
+- Internal components only
+- Save images button
 
 ---
 

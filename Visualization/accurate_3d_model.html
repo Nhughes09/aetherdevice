@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADPS-100 Accurate 3D Model Viewer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: system-ui, sans-serif;
+            background: #1a1a2e;
+            overflow: hidden;
+        }
+        #container { width: 100vw; height: 100vh; }
+        #controls {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            font-size: 13px;
+        }
+        #controls h2 { margin-bottom: 10px; color: #4af; }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            background: #333;
+            border: 1px solid #555;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover { background: #444; }
+        .btn.active { background: #4af; color: #000; }
+        #specs {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border-radius: 10px;
+            color: #aaa;
+            font-size: 11px;
+            max-width: 250px;
+        }
+        #title {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            text-align: right;
+        }
+        #title h1 { font-size: 18px; color: #4af; }
+        #title p { font-size: 12px; color: #888; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    
+    <div id="controls">
+        <h2>📐 View Controls</h2>
+        <button class="btn active" onclick="setView('exterior')">Exterior View</button>
+        <button class="btn" onclick="setView('cutaway')">Cutaway Section</button>
+        <button class="btn" onclick="setView('exploded')">Exploded View</button>
+        <button class="btn" onclick="setView('top')">Top View</button>
+        <button class="btn" onclick="setView('internal')">Internal Only</button>
+        <hr style="margin: 10px 0; border-color: #333;">
+        <button class="btn" onclick="toggleLabels()">Toggle Labels</button>
+        <button class="btn" onclick="downloadImage()">📷 Save Image</button>
+    </div>
+    
+    <div id="title">
+        <h1>ADPS-100</h1>
+        <p>Aetheric Desktop Power Station</p>
+        <p>Accurate CAD Model</p>
+    </div>
+    
+    <div id="specs">
+        <strong>Specifications (to scale):</strong><br>
+        • Diameter: 254mm (10")<br>
+        • Height: 152mm (6")<br>
+        • Wall thickness: 3.2mm<br>
+        • Copper collector: 1.6mm thick<br>
+        • Ferrite cores: 4× FT-240-43<br>
+        <br>
+        Drag to rotate • Scroll to zoom
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // EXACT DIMENSIONS FROM CAD (in mm, scaled to scene units /100)
+        const DIMS = {
+            // Enclosure
+            bodyOD: 2.54,        // 254mm
+            bodyID: 2.476,      // 247.6mm
+            bodyHeight: 1.524,  // 152.4mm
+            wallThickness: 0.032, // 3.2mm
+            
+            // Top cap
+            topCapHeight: 0.12,  // 12mm
+            topCapLipHeight: 0.08, // 8mm
+            
+            // Bottom plate
+            bottomThickness: 0.0635, // 6.35mm
+            
+            // Copper collector
+            collectorOD: 2.54,
+            collectorID: 1.524,  // Window cutout
+            collectorThickness: 0.016, // 1.6mm
+            
+            // Ground plane
+            groundPlaneOD: 2.413, // 241.3mm
+            groundPlaneThickness: 0.013, // 1.3mm
+            
+            // Acrylic window
+            windowOD: 1.524,    // 152.4mm
+            windowThickness: 0.0635, // 6.35mm
+            
+            // Shelves
+            shelfOD: 2.286,     // 228.6mm
+            shelfThickness: 0.032,
+            shelfLowerHeight: 0.38,  // 38mm from bottom
+            shelfUpperHeight: 1.00,  // 100mm from bottom
+            
+            // Bifilar coil (4x FT-240-43)
+            toroidOD: 0.61,     // 61mm
+            toroidID: 0.356,    // 35.6mm
+            toroidHeight: 0.508, // 50.8mm (4 stacked)
+            
+            // Secondary coil
+            rodDiameter: 0.127,  // 12.7mm
+            rodLength: 1.52,     // 152mm
+            rodWindingOD: 0.16,  // with windings
+        };
+
+        let scene, camera, renderer;
+        let deviceGroup, labelsGroup;
+        let currentView = 'exterior';
+        let showLabels = true;
+        
+        init();
+        animate();
+
+        function init() {
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x1a1a2e);
+            
+            camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 100);
+            camera.position.set(3, 2, 3);
+            camera.lookAt(0, 0.7, 0);
+            
+            renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.shadowMap.enabled = true;
+            document.getElementById('container').appendChild(renderer.domElement);
+            
+            // Lighting
+            const ambient = new THREE.AmbientLight(0x404040, 0.6);
+            scene.add(ambient);
+            
+            const main = new THREE.DirectionalLight(0xffffff, 0.8);
+            main.position.set(5, 10, 5);
+            main.castShadow = true;
+            scene.add(main);
+            
+            const fill = new THREE.DirectionalLight(0x4488ff, 0.3);
+            fill.position.set(-3, 5, -3);
+            scene.add(fill);
+            
+            const rim = new THREE.DirectionalLight(0xff8844, 0.2);
+            rim.position.set(0, -3, 5);
+            scene.add(rim);
+            
+            // Create device
+            deviceGroup = new THREE.Group();
+            labelsGroup = new THREE.Group();
+            
+            createAccurateDevice();
+            
+            scene.add(deviceGroup);
+            scene.add(labelsGroup);
+            
+            // Grid
+            const grid = new THREE.GridHelper(5, 20, 0x333355, 0x222244);
+            grid.position.y = -0.1;
+            scene.add(grid);
+            
+            // Controls
+            setupOrbitControls();
+            
+            window.addEventListener('resize', onResize);
+        }
+
+        function createAccurateDevice() {
+            // Materials - accurate to spec
+            const aluminumMat = new THREE.MeshStandardMaterial({
+                color: 0x2a2a35,
+                metalness: 0.9,
+                roughness: 0.3,
+            });
+            
+            const copperMat = new THREE.MeshStandardMaterial({
+                color: 0xb87333,
+                metalness: 0.95,
+                roughness: 0.15,
+            });
+            
+            const copperPolishedMat = new THREE.MeshStandardMaterial({
+                color: 0xdd8844,
+                metalness: 0.98,
+                roughness: 0.05,
+            });
+            
+            const acrylicMat = new THREE.MeshPhysicalMaterial({
+                color: 0xaaddff,
+                metalness: 0,
+                roughness: 0.1,
+                transmission: 0.9,
+                thickness: 0.5,
+            });
+            
+            const ferriteMat = new THREE.MeshStandardMaterial({
+                color: 0x1a1a1a,
+                metalness: 0.1,
+                roughness: 0.8,
+            });
+            
+            const windingMat = new THREE.MeshStandardMaterial({
+                color: 0xcc8855,
+                metalness: 0.7,
+                roughness: 0.4,
+            });
+            
+            const pcbMat = new THREE.MeshStandardMaterial({
+                color: 0x1a5522,
+                metalness: 0.3,
+                roughness: 0.6,
+            });
+            
+            // ===== ENCLOSURE BODY =====
+            const bodyGeom = new THREE.CylinderGeometry(
+                DIMS.bodyOD / 2, DIMS.bodyOD / 2, 
+                DIMS.bodyHeight, 64
+            );
+            const body = new THREE.Mesh(bodyGeom, aluminumMat);
+            body.position.y = DIMS.bodyHeight / 2 + DIMS.bottomThickness;
+            body.userData.part = 'body';
+            deviceGroup.add(body);
+            
+            // Hollow inside
+            const innerGeom = new THREE.CylinderGeometry(
+                DIMS.bodyID / 2, DIMS.bodyID / 2,
+                DIMS.bodyHeight - 0.02, 64
+            );
+            const innerMat = new THREE.MeshStandardMaterial({ 
+                color: 0x111115, 
+                side: THREE.BackSide 
+            });
+            const inner = new THREE.Mesh(innerGeom, innerMat);
+            inner.position.y = body.position.y;
+            inner.userData.part = 'inner';
+            deviceGroup.add(inner);
+            
+            // ===== BOTTOM PLATE =====
+            const bottomGeom = new THREE.CylinderGeometry(
+                DIMS.bodyOD / 2, DIMS.bodyOD / 2,
+                DIMS.bottomThickness, 64
+            );
+            const bottom = new THREE.Mesh(bottomGeom, aluminumMat);
+            bottom.position.y = DIMS.bottomThickness / 2;
+            bottom.userData.part = 'bottom';
+            deviceGroup.add(bottom);
+            
+            // Rubber feet
+            const footGeom = new THREE.SphereGeometry(0.03, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2);
+            const footMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.9 });
+            for (let i = 0; i < 4; i++) {
+                const foot = new THREE.Mesh(footGeom, footMat);
+                const angle = (i / 4) * Math.PI * 2 + Math.PI / 4;
+                foot.position.set(Math.cos(angle) * 1.0, 0, Math.sin(angle) * 1.0);
+                foot.rotation.x = Math.PI;
+                deviceGroup.add(foot);
+            }
+            
+            // ===== TOP CAP =====
+            const topCapGeom = new THREE.CylinderGeometry(
+                DIMS.bodyOD / 2, DIMS.bodyOD / 2,
+                DIMS.topCapHeight - DIMS.topCapLipHeight, 64
+            );
+            const topCap = new THREE.Mesh(topCapGeom, aluminumMat);
+            topCap.position.y = DIMS.bottomThickness + DIMS.bodyHeight + 
+                               (DIMS.topCapHeight - DIMS.topCapLipHeight) / 2;
+            topCap.userData.part = 'topCap';
+            deviceGroup.add(topCap);
+            
+            // ===== COPPER COLLECTOR with spokes =====
+            const collectorGeom = new THREE.RingGeometry(
+                DIMS.collectorID / 2 + 0.01, 
+                DIMS.collectorOD / 2 - 0.01, 
+                64
+            );
+            const collector = new THREE.Mesh(collectorGeom, copperPolishedMat);
+            collector.rotation.x = -Math.PI / 2;
+            collector.position.y = DIMS.bottomThickness + DIMS.bodyHeight + 
+                                  DIMS.topCapHeight - DIMS.topCapLipHeight + 0.01;
+            collector.userData.part = 'collector';
+            deviceGroup.add(collector);
+            
+            // Spokes
+            for (let i = 0; i < 8; i++) {
+                const spokeGeom = new THREE.BoxGeometry(0.015, 0.016, 0.45);
+                const spoke = new THREE.Mesh(spokeGeom, copperPolishedMat);
+                const angle = (i / 8) * Math.PI * 2;
+                spoke.position.set(
+                    Math.cos(angle) * 0.4,
+                    collector.position.y,
+                    Math.sin(angle) * 0.4
+                );
+                spoke.rotation.y = angle;
+                deviceGroup.add(spoke);
+            }
+            
+            // ===== ACRYLIC WINDOW =====
+            const windowGeom = new THREE.CylinderGeometry(
+                DIMS.windowOD / 2, DIMS.windowOD / 2,
+                DIMS.windowThickness, 64
+            );
+            const acrylicWindow = new THREE.Mesh(windowGeom, acrylicMat);
+            acrylicWindow.position.y = collector.position.y + 0.01;
+            acrylicWindow.userData.part = 'window';
+            deviceGroup.add(acrylicWindow);
+            
+            // ===== GROUND PLANE =====
+            const groundGeom = new THREE.CylinderGeometry(
+                DIMS.groundPlaneOD / 2, DIMS.groundPlaneOD / 2,
+                DIMS.groundPlaneThickness, 64
+            );
+            const groundPlane = new THREE.Mesh(groundGeom, copperMat);
+            groundPlane.position.y = DIMS.shelfLowerHeight - 0.03;
+            groundPlane.userData.part = 'groundPlane';
+            deviceGroup.add(groundPlane);
+            
+            // ===== LOWER SHELF =====
+            const shelfLowerGeom = new THREE.CylinderGeometry(
+                DIMS.shelfOD / 2, DIMS.shelfOD / 2,
+                DIMS.shelfThickness, 64
+            );
+            const shelfLower = new THREE.Mesh(shelfLowerGeom, aluminumMat);
+            shelfLower.position.y = DIMS.shelfLowerHeight;
+            shelfLower.userData.part = 'shelfLower';
+            deviceGroup.add(shelfLower);
+            
+            // ===== UPPER SHELF =====
+            const shelfUpper = new THREE.Mesh(shelfLowerGeom, aluminumMat);
+            shelfUpper.position.y = DIMS.shelfUpperHeight;
+            shelfUpper.userData.part = 'shelfUpper';
+            deviceGroup.add(shelfUpper);
+            
+            // ===== BIFILAR TOROIDAL COIL =====
+            const toroidGeom = new THREE.TorusGeometry(
+                (DIMS.toroidOD + DIMS.toroidID) / 4,  // radius
+                (DIMS.toroidOD - DIMS.toroidID) / 4,  // tube
+                16, 48
+            );
+            const toroidCore = new THREE.Mesh(toroidGeom, ferriteMat);
+            toroidCore.rotation.x = Math.PI / 2;
+            toroidCore.position.y = DIMS.shelfUpperHeight + 0.15;
+            toroidCore.userData.part = 'bifilarCore';
+            deviceGroup.add(toroidCore);
+            
+            // Winding on toroid
+            const windingGeom = new THREE.TorusGeometry(
+                (DIMS.toroidOD + DIMS.toroidID) / 4,
+                (DIMS.toroidOD - DIMS.toroidID) / 4 + 0.015,
+                12, 100
+            );
+            const winding = new THREE.Mesh(windingGeom, windingMat);
+            winding.rotation.x = Math.PI / 2;
+            winding.position.copy(toroidCore.position);
+            winding.userData.part = 'bifilarWinding';
+            deviceGroup.add(winding);
+            
+            // ===== SECONDARY COIL ON ROD =====
+            const rodGeom = new THREE.CylinderGeometry(
+                DIMS.rodDiameter / 2, DIMS.rodDiameter / 2,
+                DIMS.rodLength * 0.6, 16
+            );
+            const rodCore = new THREE.Mesh(rodGeom, ferriteMat);
+            rodCore.rotation.z = Math.PI / 2;
+            rodCore.position.set(0.4, DIMS.shelfUpperHeight + 0.08, 0);
+            rodCore.userData.part = 'secondaryCore';
+            deviceGroup.add(rodCore);
+            
+            // Winding on rod
+            const rodWindingGeom = new THREE.CylinderGeometry(
+                DIMS.rodWindingOD / 2, DIMS.rodWindingOD / 2,
+                DIMS.rodLength * 0.5, 24
+            );
+            const rodWinding = new THREE.Mesh(rodWindingGeom, windingMat);
+            rodWinding.rotation.z = Math.PI / 2;
+            rodWinding.position.copy(rodCore.position);
+            rodWinding.userData.part = 'secondaryWinding';
+            deviceGroup.add(rodWinding);
+            
+            // ===== PCBs =====
+            const pcbGeom = new THREE.BoxGeometry(0.7, 0.02, 0.5);
+            
+            const pcbPower = new THREE.Mesh(pcbGeom, pcbMat);
+            pcbPower.position.set(0, DIMS.shelfLowerHeight + 0.08, 0.2);
+            pcbPower.userData.part = 'pcbPower';
+            deviceGroup.add(pcbPower);
+            
+            const pcbControl = new THREE.Mesh(pcbGeom, pcbMat);
+            pcbControl.position.set(0, DIMS.shelfLowerHeight + 0.08, -0.2);
+            pcbControl.userData.part = 'pcbControl';
+            deviceGroup.add(pcbControl);
+            
+            // ===== FRONT PANEL =====
+            const panelGeom = new THREE.BoxGeometry(0.08, 0.05, 0.002);
+            const panelMat = new THREE.MeshStandardMaterial({ color: 0x1a1a20 });
+            const panel = new THREE.Mesh(panelGeom, panelMat);
+            panel.position.set(0, 0.4, DIMS.bodyOD / 2 - 0.001);
+            panel.rotation.x = Math.PI / 2;
+            panel.rotation.z = Math.PI / 2;
+            deviceGroup.add(panel);
+            
+            // LEDs on front panel
+            const ledColors = [0x44ff88, 0x4488ff, 0xff8844];
+            for (let i = 0; i < 3; i++) {
+                const ledGeom = new THREE.SphereGeometry(0.004, 16, 16);
+                const ledMat = new THREE.MeshBasicMaterial({ color: ledColors[i] });
+                const led = new THREE.Mesh(ledGeom, ledMat);
+                led.position.set(-0.015 + i * 0.015, 0.42, DIMS.bodyOD / 2 + 0.002);
+                deviceGroup.add(led);
+            }
+        }
+
+        function setView(viewName) {
+            currentView = viewName;
+            
+            // Update button states
+            document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Reset all parts visibility
+            deviceGroup.children.forEach(child => {
+                child.visible = true;
+                child.position.y = child.userData.originalY || child.position.y;
+                if (!child.userData.originalY) child.userData.originalY = child.position.y;
+            });
+            
+            switch(viewName) {
+                case 'exterior':
+                    // Show all, no changes
+                    break;
+                    
+                case 'cutaway':
+                    // Hide half of cylindrical parts
+                    deviceGroup.children.forEach(child => {
+                        if (child.userData.part === 'body' || 
+                            child.userData.part === 'inner') {
+                            child.material = child.material.clone();
+                            child.material.clippingPlanes = [
+                                new THREE.Plane(new THREE.Vector3(0, 0, 1), 0)
+                            ];
+                        }
+                    });
+                    renderer.localClippingEnabled = true;
+                    break;
+                    
+                case 'exploded':
+                    // Offset parts vertically
+                    const offsets = {
+                        'collector': 0.5,
+                        'window': 0.45,
+                        'topCap': 0.35,
+                        'body': 0,
+                        'shelfUpper': -0.1,
+                        'bifilarCore': -0.15,
+                        'bifilarWinding': -0.15,
+                        'secondaryCore': -0.2,
+                        'secondaryWinding': -0.2,
+                        'shelfLower': -0.3,
+                        'pcbPower': -0.35,
+                        'pcbControl': -0.35,
+                        'groundPlane': -0.4,
+                        'bottom': -0.5,
+                    };
+                    deviceGroup.children.forEach(child => {
+                        if (child.userData.part && offsets[child.userData.part] !== undefined) {
+                            child.position.y = child.userData.originalY + offsets[child.userData.part];
+                        }
+                    });
+                    break;
+                    
+                case 'top':
+                    camera.position.set(0, 4, 0.01);
+                    camera.lookAt(0, 0.7, 0);
+                    break;
+                    
+                case 'internal':
+                    // Hide enclosure
+                    deviceGroup.children.forEach(child => {
+                        if (['body', 'inner', 'topCap', 'bottom', 'collector', 'window'].includes(child.userData.part)) {
+                            child.visible = false;
+                        }
+                    });
+                    break;
+            }
+        }
+
+        function toggleLabels() {
+            showLabels = !showLabels;
+            labelsGroup.visible = showLabels;
+        }
+
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.download = `ADPS100_${currentView}_view.png`;
+            link.href = renderer.domElement.toDataURL('image/png');
+            link.click();
+        }
+
+        function setupOrbitControls() {
+            let isDragging = false;
+            let previousMouse = { x: 0, y: 0 };
+            let spherical = { theta: Math.PI / 4, phi: Math.PI / 3, radius: 4 };
+            
+            renderer.domElement.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                previousMouse = { x: e.clientX, y: e.clientY };
+            });
+            
+            renderer.domElement.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                
+                const deltaX = e.clientX - previousMouse.x;
+                const deltaY = e.clientY - previousMouse.y;
+                
+                spherical.theta -= deltaX * 0.005;
+                spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.phi + deltaY * 0.005));
+                
+                updateCamera();
+                previousMouse = { x: e.clientX, y: e.clientY };
+            });
+            
+            renderer.domElement.addEventListener('mouseup', () => isDragging = false);
+            renderer.domElement.addEventListener('mouseleave', () => isDragging = false);
+            
+            renderer.domElement.addEventListener('wheel', (e) => {
+                spherical.radius = Math.max(1.5, Math.min(8, spherical.radius + e.deltaY * 0.002));
+                updateCamera();
+            });
+            
+            function updateCamera() {
+                camera.position.x = spherical.radius * Math.sin(spherical.phi) * Math.sin(spherical.theta);
+                camera.position.y = spherical.radius * Math.cos(spherical.phi);
+                camera.position.z = spherical.radius * Math.sin(spherical.phi) * Math.cos(spherical.theta);
+                camera.lookAt(0, 0.7, 0);
+            }
+        }
+
+        function onResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+    </script>
+</body>
+</html>
